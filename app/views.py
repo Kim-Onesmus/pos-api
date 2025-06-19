@@ -70,7 +70,8 @@ def login_view(request):
         'data': {
             'user': {
                 'id': str(user.id),
-                'username': user.username
+                'username': user.username,
+                "role": user.role
             },
             'access': str(refresh.access_token),
             'refresh': str(refresh)
