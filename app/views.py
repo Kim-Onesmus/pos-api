@@ -23,16 +23,20 @@ def register_user(request):
             'data': {
                 'id': str(user.id),
                 'username': user.username,
-                'email': user.email,
                 'role': user.role
             }
         }, status=status.HTTP_201_CREATED)
-    return Response({
-        'status': 'error',
-        'message': 'User creation failed.',
-        'code': status.HTTP_400_BAD_REQUEST,
-        'errors': serializer.errors
-    }, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        flat_errors = []
+        for field_errors in serializer.errors.values():
+            flat_errors.extend(field_errors)
+
+        return Response({
+            'status': 'error',
+            'message': 'User creation failed.',
+            'code': status.HTTP_400_BAD_REQUEST,
+            'errors': flat_errors
+        }, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def login_view(request):
