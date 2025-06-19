@@ -11,23 +11,23 @@ from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 
 @api_view(['POST'])
 def login_view(request):
-    email = request.data.get('email')
+    username = request.data.get('username')
     password = request.data.get('password')
 
-    if email is None or password is None:
+    if username is None or password is None:
         return Response({
             'status': 'error',
-            'message': 'Email and password are required.',
+            'message': 'Username and password are required.',
             'code': status.HTTP_400_BAD_REQUEST,
             'data': None
         }, status=status.HTTP_400_BAD_REQUEST)
 
-    user = authenticate(request, email=email, password=password)
+    user = authenticate(request, username=username, password=password)
 
     if not user:
         return Response({
             'status': 'error',
-            'message': 'Invalid email or password.',
+            'message': 'Invalid username or password.',
             'code': status.HTTP_401_UNAUTHORIZED,
             'data': None
         }, status=status.HTTP_401_UNAUTHORIZED)
@@ -41,7 +41,7 @@ def login_view(request):
         'data': {
             'user': {
                 'id': str(user.id),
-                'email': user.email
+                'username': user.username
             },
             'access': str(refresh.access_token),
             'refresh': str(refresh)
