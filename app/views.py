@@ -7,7 +7,32 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
+from .serializers import UserCreateSerializer
 
+
+
+@api_view(['POST'])
+def register_user(request):
+    serializer = UserCreateSerializer(data=request.data)
+    if serializer.is_valid():
+        user = serializer.save()
+        return Response({
+            'status': 'success',
+            'message': 'User created successfully.',
+            'code': status.HTTP_201_CREATED,
+            'data': {
+                'id': str(user.id),
+                'username': user.username,
+                'email': user.email,
+                'role': user.role
+            }
+        }, status=status.HTTP_201_CREATED)
+    return Response({
+        'status': 'error',
+        'message': 'User creation failed.',
+        'code': status.HTTP_400_BAD_REQUEST,
+        'errors': serializer.errors
+    }, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def login_view(request):

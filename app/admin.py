@@ -5,15 +5,15 @@ from .models import User
 
 class UserAdmin(BaseUserAdmin):
     model = User
-    ordering = ['email']
-    list_display = ['email', 'is_staff', 'is_active']
+    ordering = ['username']
+    list_display = ['username', 'role', 'is_staff', 'is_active']
     list_filter = ['is_staff', 'is_superuser', 'is_active']
     readonly_fields = ['last_login', 'date_joined']  # <-- add this
 
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
+        (None, {'fields': ('username', 'password', 'role', 'email',)}),
         (_('Permissions'), {
-            'fields': ('is_staff', 'is_active', 'is_superuser', 'groups', 'user_permissions')
+            'fields': ('is_staff', 'is_active', 'is_superuser')
         }),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),  # OK now
     )
