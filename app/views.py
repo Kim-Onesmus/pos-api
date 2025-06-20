@@ -8,6 +8,7 @@ from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from .serializers import UserCreateSerializer
+from rest_framework import status, permissions
 
 
 
@@ -106,3 +107,34 @@ def refresh_token_view(request):
                 'error': str(e)
             }
         }, status=status.HTTP_401_UNAUTHORIZED)
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def logout_view(request):
+    refresh_token = request.data.get("refresh")
+
+    if refresh_token is None:
+        return Response({
+            "status": "error",
+            "message": "Refresh token is required to logout.",
+            "code": status.HTTP_400_BAD_REQUEST
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        token = RefreshToken(refresh_token)
+        token.blacklist()
+
+        return Response({
+            "status": "success",
+            "message": "Logout successful. Token blacklisted.",
+            "code": status.HTTP_205_RESET_CONTENT
+        }, status=status.HTTP_205_RESET_CONTENT)
+
+    except TokenError as e:
+        return Response({
+            "status": "error",
+            "message": "Token is invalid or already blacklisted.",
+            "code": status.HTTP_400_BAD_REQUEST,
+            "details": str(e)
+        }, status=status.HTTP_400_BAD_REQUEST)
