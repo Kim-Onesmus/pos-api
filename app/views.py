@@ -128,8 +128,8 @@ def logout_view(request):
         return Response({
             "status": "success",
             "message": "Logout successful. Token blacklisted.",
-            "code": status.HTTP_205_RESET_CONTENT
-        }, status=status.HTTP_205_RESET_CONTENT)
+            "code": status.HTTP_200_OK
+        }, status=status.HTTP_200_OK)
 
     except TokenError as e:
         return Response({
