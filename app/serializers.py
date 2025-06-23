@@ -25,3 +25,20 @@ class UserCreateSerializer(serializers.ModelSerializer):
             # email=validated_data.get('email', ''),
             role=validated_data['role']
         )
+
+
+from .models import Category
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['id', 'name', 'description', 'status', 'created_at']
+
+    def validate_name(self, value):
+        if self.instance:  # For updates
+            if Category.objects.exclude(pk=self.instance.pk).filter(name__iexact=value).exists():
+                raise serializers.ValidationError("Another category with this name already exists.")
+        else:  # For creation
+            if Category.objects.filter(name__iexact=value).exists():
+                raise serializers.ValidationError("A category with this name already exists.")
+        return value
