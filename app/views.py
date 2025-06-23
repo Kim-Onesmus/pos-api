@@ -185,6 +185,7 @@ def category_detail(request, pk):
         serializer = CategorySerializer(category)
         return Response({
             'status': 'success',
+            'message': 'Category retrieved successfully',
             'code': status.HTTP_200_OK,
             'data': serializer.data
             }, status=status.HTTP_200_OK)
@@ -196,11 +197,13 @@ def category_detail(request, pk):
             return Response({
                 'status': 'success',
                 'message': 'Category updated successfully.',
+                'code': status.HTTP_200_OK,
                 'data': serializer.data
             }, status=status.HTTP_200_OK)
         return Response({
             'status': 'error',
             'message': 'Failed to update category.',
+            'code': status.HTTP_400_BAD_REQUEST,
             'errors': serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
 
@@ -208,5 +211,6 @@ def category_detail(request, pk):
         category.delete()
         return Response({
             'status': 'success',
+            'code': status.HTTP_204_NO_CONTENT,
             'message': 'Category deleted successfully.'
         }, status=status.HTTP_204_NO_CONTENT)
