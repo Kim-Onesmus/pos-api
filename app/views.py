@@ -141,6 +141,7 @@ def logout_view(request):
 
 
 @api_view(['GET', 'POST'])
+@permission_classes([permissions.IsAuthenticated])
 def category_list_create(request):
     if request.method == 'GET':
         categories = Category.objects.all().order_by('-created_at')
@@ -171,6 +172,7 @@ def category_list_create(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([permissions.IsAuthenticated])
 def category_detail(request, pk):
     try:
         category = Category.objects.get(id=pk)
