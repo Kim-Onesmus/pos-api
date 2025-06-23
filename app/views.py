@@ -173,16 +173,21 @@ def category_list_create(request):
 @api_view(['GET', 'PUT', 'DELETE'])
 def category_detail(request, pk):
     try:
-        category = Category.objects.get(pk=pk)
+        category = Category.objects.get(id=pk)
     except Category.DoesNotExist:
         return Response({
             'status': 'error',
-            'message': 'Category not found.'
+            'message': 'Category not found.',
+            'code': status.HTTP_400_BAD_REQUEST
         }, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
         serializer = CategorySerializer(category)
-        return Response({'status': 'success', 'data': serializer.data}, status=status.HTTP_200_OK)
+        return Response({
+            'status': 'success',
+            'code': status.HTTP_200_OK,
+            'data': serializer.data
+            }, status=status.HTTP_200_OK)
 
     elif request.method == 'PUT':
         serializer = CategorySerializer(category, data=request.data)
