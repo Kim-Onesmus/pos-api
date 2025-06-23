@@ -145,7 +145,12 @@ def category_list_create(request):
     if request.method == 'GET':
         categories = Category.objects.all().order_by('-created_at')
         serializer = CategorySerializer(categories, many=True)
-        return Response({'status': 'success', 'data': serializer.data}, status=status.HTTP_200_OK)
+        return Response({
+            'status': 'success',
+            'message': 'Categories retrieved successfully',
+            'code': status.HTTP_200_OK,
+            'data': serializer.data
+            }, status=status.HTTP_200_OK)
 
     elif request.method == 'POST':
         serializer = CategorySerializer(data=request.data)
@@ -154,11 +159,13 @@ def category_list_create(request):
             return Response({
                 'status': 'success',
                 'message': 'Category added successfully.',
+                'code': status.HTTP_200_OK,
                 'data': serializer.data
             }, status=status.HTTP_201_CREATED)
         return Response({
             'status': 'error',
             'message': 'Failed to create category.',
+            'code': status.HTTP_400_BAD_REQUEST,
             'errors': serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
 
