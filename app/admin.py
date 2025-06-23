@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
-from .models import User
+from .models import User, Category
 
 class UserAdmin(BaseUserAdmin):
     model = User
@@ -29,3 +29,11 @@ class UserAdmin(BaseUserAdmin):
 
 
 admin.site.register(User, UserAdmin)
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'status', 'created_at')
+    search_fields = ('name',)
+    list_filter = ('status', 'created_at')
+    ordering = ('-created_at',)
